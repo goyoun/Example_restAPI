@@ -1,18 +1,26 @@
 package com.example.restapi.controller.v1;
 
+import com.example.restapi.advice.exception.CUserNotFoundException;
 import com.example.restapi.entity.User;
 import com.example.restapi.model.response.CommonResult;
 import com.example.restapi.model.response.ListResult;
 import com.example.restapi.model.response.SingleResult;
 import com.example.restapi.repository.UserJpaRepository;
 import com.example.restapi.service.ResponseService;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Api(tags = {"1. User"}) // UserController를 대표하는 최상단 타이틀 영역에 표시될 값을 세팅합니다.
 @RequiredArgsConstructor // 선언시 class 내부에 final로 선언된 객체에 대해서 Constructor Injection을 수행함
@@ -32,10 +40,12 @@ public class UserController {
     }
 
     @ApiOperation(value = "회원 단건 조회", notes = "userId로 회원을 조회한다")
-    @GetMapping(value = "/user/{msrl}")
-    public SingleResult<User> findUserById(@ApiParam(value = "회원ID", required = true) @PathVariable long msrl) {
+    @GetMapping(value = "/user/{userId}")
+    public SingleResult<User> findUserById(@ApiParam(value = "회원ID", required = true) @PathVariable long userId,
+                                           @ApiParam(value = "언어", defaultValue = "ko")
+                                           @RequestParam String lang) {
         // 결과 데이터가 단일건인경우 getBasicResult를 이용해서 결과를 출력한다.
-        return responseService.getSingleResult(userJpaRepository.findById(msrl).orElse(null));
+        return responseService.getSingleResult(userJpaRepository.findById(userId).orElseThrow(CUserNotFoundException::new));
     }
 
     @ApiOperation(value = "회원 입력", notes = "회원을 입력한다")

@@ -8,9 +8,10 @@ server:
 
 spring:
   datasource:
-    url: jdbc:h2:tcp://localhost/~/test
-    driver-class-name: org.h2.Driver
-    username: sa
+    url: jdbc:mysql://localhost:3306/EXAMPLE
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     properties.hibernate.hbm2ddl.auto: none
@@ -18,6 +19,9 @@ spring:
   freemarker:
     template-loader-path: classpath:/templates/
     suffix: .ftl
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8
   mvc:
     pathmatch:
-      matching-strategy: ant_path-matcher
+      matching-strategy: ant-path-matcher
