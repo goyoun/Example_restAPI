@@ -13,7 +13,8 @@ spring:
     username: root
     password: 1234
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     properties.hibernate.hbm2ddl.auto: none
     showSql: true
   freemarker:
@@ -25,3 +26,6 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant-path-matcher
+  jwt:
+    secret: govlepe1@$&
+    

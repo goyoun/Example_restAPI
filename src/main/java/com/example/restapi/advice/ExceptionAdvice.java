@@ -2,10 +2,9 @@ package com.example.restapi.advice;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.example.restapi.advice.exception.CUserNotFoundException;
 import com.example.restapi.model.response.CommonResult;
 import com.example.restapi.service.ResponseService;
-
+import com.example.restapi.advice.exception.*;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 
 @RequiredArgsConstructor
@@ -69,6 +67,13 @@ public class ExceptionAdvice {
     // code 정보, 추가 argument로 현재 locale에 맞는 메세지를 조회합니다.
     private String getMessage(String code, Object[] args) {
         return messageSource.getMessage(code, args, LocaleContextHolder.getLocale());
+    }
+
+    // 이메일
+    @ExceptionHandler(CEmailSigninFailedException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected CommonResult emailSigninFailed(HttpServletRequest request, CEmailSigninFailedException e) {
+        return responseService.getFailResult(Integer.valueOf(getMessage("emailSigninFailed.code")), getMessage("emailSigninFailed.msg"));
     }
 
     
